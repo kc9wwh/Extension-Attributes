@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>Boot Volume Free Space</displayName>
+<description>Returns the free space on the current boot volume in GB, rounded down to the nearest integer.</description>
+<dataType>number</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+&#13;
+## Get the OS version&#13;
+OS=`/usr/bin/sw_vers -productVersion | awk -F. {'print $2'}`&#13;
+&#13;
+if [[ $OS -ge 12  ]]; then&#13;
+	free=`diskutil info / | grep "Available Space" | awk '{print $4}'`&#13;
+else&#13;
+	free=`diskutil info / | grep "Free Space" | awk '{print $4}'`&#13;
+fi&#13;
+&#13;
+echo "&lt;result&gt;"${free%.*}"&lt;/result&gt;"</scriptContentsMac>
+<scriptContentsWindows/>
+</extensionAttribute>
