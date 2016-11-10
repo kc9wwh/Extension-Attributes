@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>CheckPoint - Encryption</displayName>
+<description>Determines CheckPoint Client Encryption Status&#13;
+Supports CheckPoint E80.62</description>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+&#13;
+encryptionState=`/usr/bin/defaults read /Library/Application\ Support/Checkpoint/FDE/fdeencstatus.plist encryptionState`&#13;
+currentProgress=`/usr/bin/defaults read /Library/Application\ Support/Checkpoint/FDE/fdeencstatus.plist currentProgress`&#13;
+maxProgress=`/usr/bin/defaults read /Library/Application\ Support/Checkpoint/FDE/fdeencstatus.plist maxProgress`&#13;
+encryptingPercentage=$(echo "$currentProgress/$maxProgress*100" | bc -l)&#13;
+decryptingPercentage=$(echo "100-$encryptingPercentage" | bc -l)&#13;
+&#13;
+if [ $encryptionState == 3 ]; then&#13;
+    echo "&lt;result&gt;Encrypted&lt;/result&gt;"&#13;
+else&#13;
+    if [ $encryptionState == 2 ]; then&#13;
+    	echo "&lt;result&gt;Decrypting - $decryptingPercentage%&lt;/result&gt;"&#13;
+    else&#13;
+    	if [ $encryptionState == 1 ]; then&#13;
+    		echo "&lt;result&gt;Encrypting - $encryptingPercentage%&lt;/result&gt;"&#13;
+    	else&#13;
+    		if [ $encryptionState == 0 ]; then&#13;
+    			echo "&lt;result&gt;Unencrypted&lt;/result&gt;"&#13;
+    		else&#13;
+    			echo "&lt;result&gt;Unknown&lt;/result&gt;"&#13;
+    		fi&#13;
+    	fi&#13;
+    fi&#13;
+fi&#13;
+&#13;
+exit 0</scriptContentsMac>
+<scriptContentsWindows/>
+</extensionAttribute>
