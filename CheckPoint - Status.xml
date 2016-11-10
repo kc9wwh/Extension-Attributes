@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><extensionAttribute>
+<displayName>CheckPoint - Status</displayName>
+<description>Determines CheckPoint Client Status&#13;
+Supports CheckPoint E80.62</description>
+<dataType>string</dataType>
+<scriptContentsMac>#!/bin/bash&#13;
+&#13;
+clientStatus=`/usr/bin/defaults read /Library/Application\ Support/Checkpoint/FDE/fdeencstatus.plist clientStatus`&#13;
+&#13;
+if [ $clientStatus == 70 ]; then&#13;
+    echo "&lt;result&gt;Encrypted&lt;/result&gt;"&#13;
+else&#13;
+    if [ $clientStatus == 60 ]; then&#13;
+    	echo "&lt;result&gt;Decrypting&lt;/result&gt;"&#13;
+    else&#13;
+    	if [ $clientStatus == 50 ]; then&#13;
+    		echo "&lt;result&gt;Encrypting&lt;/result&gt;"&#13;
+    	else&#13;
+    		if [ $clientStatus == 45 ]; then&#13;
+    			echo "&lt;result&gt;Decrypted - Pending Reboot&lt;/result&gt;"&#13;
+    		else&#13;
+    			if [ $clientStatus == 40 ]; then&#13;
+    				echo "&lt;result&gt;Decrypted - Profile Delivered&lt;/result&gt;"&#13;
+    			else&#13;
+    				if [ $clientStatus == 10 ]; then&#13;
+    					echo "&lt;result&gt;Decrypted - Getting User Info&lt;/result&gt;"&#13;
+    				else&#13;
+    					if [ $clientStatus == 0 ]; then&#13;
+    						echo "&lt;result&gt;Decrypted - Waiting for Policy&lt;/result&gt;"&#13;
+    					else&#13;
+    						echo "&lt;result&gt;Unknown&lt;/result&gt;"&#13;
+    					fi&#13;
+    				fi	&#13;
+    			fi&#13;
+    		fi&#13;
+    	fi&#13;
+    fi&#13;
+fi&#13;
+&#13;
+exit 0</scriptContentsMac>
+<scriptContentsWindows/>
+</extensionAttribute>
